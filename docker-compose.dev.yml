@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  frontend:
+    volumes:
+      - "./frontend/src:/app/src"
+      - "./frontend/static:/app/static"
+    command: [ "npm", "run", "dev" ]
+  api:
+    volumes:
+      - "./api/src:/app/src"
+    command: [ "npm", "run", "dev" ]
+  mongo-express:
+    container_name: meripaste-mongo-express
+    image: mongo-express
+    depends_on:
+      - mongo
+    restart: always
+    ports:
+      - ${DB_INTERFACE_PORT}:${DB_INTERFACE_PORT}
+    environment:
+      ME_CONFIG_MONGODB_URL: ${DB_URL}

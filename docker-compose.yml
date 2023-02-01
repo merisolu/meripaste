@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  frontend:
+    container_name: meripaste-frontend
+    restart: always
+    build: ./frontend
+    environment:
+      - API_ROOT=${API_ROOT}
+      - PORT=${FRONTEND_PORT}
+      - ORIGIN=${FRONTEND_ORIGIN}
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    depends_on:
+      - api
+  api:
+    container_name: meripaste-api
+    restart: always
+    build: ./api
+    environment:
+      - PORT=${API_PORT}
+      - DB_COLLECTION_URL=${DB_COLLECTION_URL}
+    depends_on:
+      - mongo
+  mongo:
+    container_name: meripaste-mongo
+    image: mongo
+    restart: always
+    volumes:
+      - data:/data/db
+      - config_data:/data/configdb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+volumes: 
+  data: {}
+  config_data: {}
